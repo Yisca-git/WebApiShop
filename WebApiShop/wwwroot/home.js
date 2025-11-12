@@ -34,8 +34,11 @@ async function newUser() {
 async function logIn() { 
     const userName = document.querySelector("#logInName").value
     const password = document.querySelector("#logInPassword").value
-    const logInUser = {
+    const ExistUser = {
+        Id: 0,
         UserName: userName,
+        FirstName: null,
+        LastName: null,
         Password: password
     }
     try {
@@ -44,7 +47,7 @@ async function logIn() {
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(logInUser)
+                body: JSON.stringify(ExistUser)
             }
         );
         if (!response.ok) {

@@ -30,11 +30,11 @@ async function updateDetails() {
         }
         else {
             alert("המשתמש עודכן בהצלחה")
-            sessionStorage.setItem("id", updateUser.id)
-            sessionStorage.setItem("userName", updateUser.userName)
-            sessionStorage.setItem("firstName", updateUser.firstName)
-            sessionStorage.setItem("lastName", updateUser.lastName)
-            sessionStorage.setItem("password", updateUser.password)
+            sessionStorage.setItem("id", updateUser.Id)
+            sessionStorage.setItem("userName", updateUser.UserName)
+            sessionStorage.setItem("firstName", updateUser.FirstName)
+            sessionStorage.setItem("lastName", updateUser.LastName)
+            sessionStorage.setItem("password", updateUser.Password)
         }
     }
     catch (e) { alert(e) }
