@@ -7,43 +7,58 @@ using Services;
 
 namespace WebApiShop.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        UserService userService = new();
+        private readonly IUserService _userService;
+        public UsersController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return userService.GetUsers();
+            return _userService.GetUsers();
         }
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            return userService.GetUserById(id);
+            return _userService.GetUserById(id);
         }
 
         // POST api/<Users>
         [HttpPost]
-        public ActionResult<User> AddUser([FromBody] User user)
+        public ActionResult<User> AddUser([FromBody] User newUser)
         {
-            return userService.AddUser(user);
+            User user = _userService.AddUser(newUser);
+            if(user==null)
+            {
+                return BadRequest(user);
+            }
+            return CreatedAtAction(nameof(Get), new { Id = user.Id }, user);
         }
         // POST api/<UsersController>
         [HttpPost("{login}")]
         public ActionResult<User> LogIn([FromBody] User LogInUser)
         {
-            return userService.LogIn(LogInUser);
+            User user = _userService.LogIn(LogInUser);
+            return CreatedAtAction(nameof(Get), new { Id = user.Id }, user);
         }
 
         // PUT api/<Users>/5
         [HttpPut("{id}")]
-        public void UpdateUser(int id, [FromBody] User updateUser)
+        public ActionResult<User> UpdateUser(int id, [FromBody] User updateUser)
         {
-            userService.UpdateUser(id, updateUser);
+            bool flag = _userService.UpdateUser(id, updateUser);
+            if (flag)
+            {
+                return Ok(updateUser);
+            }
+            return BadRequest(updateUser);
         }
 
         // DELETE api/<Users>/5

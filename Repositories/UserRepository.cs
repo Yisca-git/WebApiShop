@@ -3,9 +3,9 @@ using Entities;
 
 namespace Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
-        string filePath = "C:\\Users\\Owner\\Documents\\לימודים\\API\\WebApiShop\\WebApiShop\\users.txt";
+        string filePath = "../WebApiShop/users.txt";
 
         public List<User> GetUsers()
         {

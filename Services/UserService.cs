@@ -1,33 +1,50 @@
 ﻿using Entities;
+using Microsoft.VisualBasic;
 using Repositories;
 namespace Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        UserRepository userRepository = new();
+        private readonly IUserRepository _userRepository;
+        private readonly IUserPasswordService _userPasswordService;
+        public UserService(IUserRepository userRepository, IUserPasswordService userPasswordService)
+        {
+            _userRepository= userRepository;
+            _userPasswordService= userPasswordService;
+        }
         public List<User> GetUsers()
         {
-            return userRepository.GetUsers();
+            return _userRepository.GetUsers();
         }
 
         public User GetUserById(int Id)
         {
-            return userRepository.GetUserById(Id);
+            return _userRepository.GetUserById(Id);
         }
 
         public User AddUser(User user)
         {
-            return userRepository.AddUser(user);
+            if(_userPasswordService.CheckPassword(user.Password)<=2)
+            {
+                return null;
+            }
+            return _userRepository.AddUser(user);
         }
 
         public User LogIn(User LogInUser)
         {
-            return userRepository.LogIn(logInUser);
+            
+            return _userRepository.LogIn(LogInUser);
         }
 
-        public void UpdateUser(int id, User updeteUser)
+        public bool UpdateUser(int id, User updeteUser)
         {
-            userRepository.UpdateUser(id, updeteUser);
+            if (_userPasswordService.CheckPassword(updeteUser.Password) <= 2)
+            {
+                return false;
+            }
+            _userRepository.UpdateUser(id, updeteUser);
+            return true;
         }
     }
 }

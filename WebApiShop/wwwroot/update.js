@@ -26,6 +26,7 @@ async function updateDetails() {
             }
         )
         if (!response.ok) {
+            alert("העדכון נכשל! כנראה הזנת סיסמא חלשה מידי...")
             throw new Error(`HTTP error! status ${response.status}`);
         }
         else {

@@ -12,7 +12,9 @@ async function newUser() {
         LastName: lastName,
         Password: password
     }
+    
     try {
+        
         const response = await fetch(
             "/api/Users",
             {
@@ -25,6 +27,7 @@ async function newUser() {
             alert("המשתמש נרשם בהצלחה!")
         }
         else {
+            alert("הרישום נכשל! מומלץ לבדוק חוזק סיסמא")
             throw new Error(`HTTP error! status: ${response.status}`)
         }
     }
@@ -37,8 +40,8 @@ async function logIn() {
     const ExistUser = {
         Id: 0,
         UserName: userName,
-        FirstName: null,
-        LastName: null,
+        FirstName: " ",
+        LastName: " ",
         Password: password
     }
     try {
@@ -64,6 +67,41 @@ async function logIn() {
         }
     }
     catch (e) { alert(e) }  
+}
+
+async function CheckPassword() {
+    const points = document.querySelectorAll(".point")
+    const password = document.querySelector("#password").value
+    const UserPassword = {
+        Password: password
+    }
+    for (let i = 0; i < points.length; i++) {
+        points[i].style.backgroundColor = "#ddd";
+    }
+    try {
+        
+        const response = await fetch(
+            "/api/UsersPassword",
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(UserPassword)
+            }
+        );
+        const num = await response.json()
+        const count = Math.min(num, points.length);
+        for (let i = 0; i < count; i++) {
+            points[i].style.backgroundColor = "red";
+        }
+        if (response.ok) {
+            alert(`סיסמא חזקה דרגה:${count}`) 
+        }
+        else {
+            alert(`סיסמא חלשה דרגה:${count}`) 
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+    }
+    catch (e) { alert(e) }
 }
 
 
