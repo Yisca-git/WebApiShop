@@ -38,20 +38,8 @@ namespace WebApiShop.Controllers
         {
             int score = _userPasswordService.CheckPassword(userPassword.Password);
             if (score <= 2)
-                return BadRequest(score);
+                return BadRequest("Password is not strong enough");
             return Ok(score);
-        }
-
-        // PUT api/<UsersPassword>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<UsersPassword>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
