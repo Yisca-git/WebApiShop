@@ -18,16 +18,22 @@ namespace WebApiShop.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<User> Get()
+        public ActionResult<IEnumerable<User>> Get()
         {
-            return _userService.GetUsers();
+            List<User> users = _userService.GetUsers();
+            if (users.Count == 0)
+                return NoContent();
+            return Ok(users);
         }
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public ActionResult<User> Get(int id)
         {
-            return _userService.GetUserById(id);
+            User user = _userService.GetUserById(id);
+            if (user == null)
+                return NotFound();
+            return Ok(user);
         }
 
         // POST api/<Users>
@@ -35,30 +41,32 @@ namespace WebApiShop.Controllers
         public ActionResult<User> AddUser([FromBody] User newUser)
         {
             User user = _userService.AddUser(newUser);
-            if(user==null)
+            if(user == null)
             {
-                return BadRequest(user);
+                return BadRequest("Password is not strong enough");
             }
             return CreatedAtAction(nameof(Get), new { Id = user.Id }, user);
         }
         // POST api/<UsersController>
-        [HttpPost("{login}")]
-        public ActionResult<User> LogIn([FromBody] User LogInUser)
+        [HttpPost("login")]
+        public ActionResult<User> LogIn([FromBody] User loginUser)
         {
-            User user = _userService.LogIn(LogInUser);
-            return CreatedAtAction(nameof(Get), new { Id = user.Id }, user);
+            User user = _userService.LogIn(loginUser);
+            if (user == null)
+                return Unauthorized();
+            return Ok(user);
         }
 
         // PUT api/<Users>/5
         [HttpPut("{id}")]
-        public ActionResult<User> UpdateUser(int id, [FromBody] User updateUser)
+        public IActionResult UpdateUser(int id, [FromBody] User updateUser)
         {
-            bool flag = _userService.UpdateUser(id, updateUser);
-            if (flag)
+            bool isUpdateSuccessful = _userService.UpdateUser(id, updateUser);
+            if (isUpdateSuccessful)
             {
-                return Ok(updateUser);
+                return NoContent();
             }
-            return BadRequest(updateUser);
+            return BadRequest("Password is not strong enough");
         }
 
         // DELETE api/<Users>/5
