@@ -38,7 +38,7 @@ namespace WebApiShop.Controllers
         {
             int score = _userPasswordService.CheckPassword(userPassword.Password);
             if (score <= 2)
-                return BadRequest("Password is not strong enough");
+                return BadRequest(score);
             return Ok(score);
         }
     }
