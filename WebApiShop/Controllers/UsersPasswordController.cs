@@ -34,7 +34,7 @@ namespace WebApiShop.Controllers
 
         // POST api/<UsersPassword>
         [HttpPost]
-        public ActionResult<int> CheckPassword([FromBody] UserPassword userPassword)
+        public ActionResult<int> CheckPassword([FromBody] UserPassword1 userPassword)
         {
             int score = _userPasswordService.CheckPassword(userPassword.Password);
             if (score <= 2)

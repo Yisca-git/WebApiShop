@@ -1,20 +1,22 @@
 ﻿const namePlace = document.querySelector(".namePlace")
-const name = sessionStorage.getItem("firstName")
-namePlace.textContent = `ברוך הבא ${name} מייד נצלול פנימה`
+const name = JSON.parse(sessionStorage.getItem("user"))
+const f_name=name.userFirstName
+namePlace.textContent = `ברוך הבא ${f_name} מייד נצלול פנימה`
 
 //update
 async function updateDetails() {
-    const id = Number(sessionStorage.getItem("id"))
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
+    const id = storedUser.userId;
     const userName = document.querySelector("#userName").value
     const firstName = document.querySelector("#firstName").value
     const lastName = document.querySelector("#lastName").value
     const password = document.querySelector("#password").value
     const updateUser = {
-        Id: id,
+        UserId: id,
         UserName: userName,
-        FirstName: firstName,
-        LastName: lastName,
-        Password: password
+        UserFirstName: firstName,
+        UserLastName: lastName,
+        UserPassword: password
     }
     try {
         const response = await fetch(
@@ -31,11 +33,8 @@ async function updateDetails() {
         }
         else {
             alert("המשתמש עודכן בהצלחה")
-            sessionStorage.setItem("id", updateUser.Id)
-            sessionStorage.setItem("userName", updateUser.UserName)
-            sessionStorage.setItem("firstName", updateUser.FirstName)
-            sessionStorage.setItem("lastName", updateUser.LastName)
-            sessionStorage.setItem("password", updateUser.Password)
+            const updatedUser = await response.json();
+            sessionStorage.setItem("user", JSON.stringify(updatedUser));
         }
     }
     catch (e) { alert(e) }

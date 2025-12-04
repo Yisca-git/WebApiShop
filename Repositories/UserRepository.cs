@@ -19,7 +19,7 @@ namespace Repositories
 
         public async Task<User> GetUserById(int id)
         {
-           User? userById = await _shop_WebApiContext.FindAsync(id);
+           User? userById = await _shop_WebApiContext.Users.FindAsync(id);
            return userById;
         }
 
@@ -38,14 +38,15 @@ namespace Repositories
 
         public async Task<User> UpdateUser(int id, User updateUser)
         {
-            User UserToUpdate = await _shop_WebApiContext.Users.FindAsync(id);
+            User UserToUpdate = await GetUserById(id);
             if (UserToUpdate == null)
             {
                 return null;
             }
-            _shop_WebApiContext.Users.Entry(UserToUpdate).CurrentValues.SetValues(updateUser);
+            
+            _shop_WebApiContext.Entry(UserToUpdate).CurrentValues.SetValues(updateUser);
             await _shop_WebApiContext.SaveChangesAsync();
-            return updateUser;
+            return UserToUpdate;
         }
 
     }

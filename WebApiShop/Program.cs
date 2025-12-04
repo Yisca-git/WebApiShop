@@ -12,8 +12,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
 builder.Services.AddScoped<IUserPasswordService, UserPasswordService>();
 builder.Services.AddDbContext<Shop_WebApiContext>(options => options.UseSqlServer
-("Data Source = DESKTOP - 55334A9; Initial Catalog = Shop_WebApi; Integrated Security = True; Trust Server Certificate=True"));
-
+("Data Source=DESKTOP-55334A9;Initial Catalog=Shop_WebApi;Integrated Security = True;Trust Server Certificate=True"));
 
 builder.Services.AddControllers();
 

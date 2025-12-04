@@ -6,15 +6,15 @@ async function newUser() {
     const lastName = document.querySelector("#lastName").value
     const password = document.querySelector("#password").value
     const User = {
-        Id: 0, 
+        UserId: 0, 
         UserName: userName,
-        FirstName: firstName,
-        LastName: lastName,
-        Password: password
+        UserFirstName: firstName,
+        UserLastName: lastName,
+        UserPassword: password
     }
     
     try {
-        
+        console.log(User)
         const response = await fetch(
             "/api/Users",
             {
@@ -34,15 +34,16 @@ async function newUser() {
     catch (e) { alert(e) } 
 }
 //logIn
-async function logIn() { 
+async function logIn() {
+   
     const userName = document.querySelector("#logInName").value
     const password = document.querySelector("#logInPassword").value
     const ExistUser = {
-        Id: 0,
+        UserId: 0,
         UserName: userName,
-        FirstName: " ",
-        LastName: " ",
-        Password: password
+        UserFirstName: " ",
+        UserLastName: " ",
+        UserPassword: password
     }
     try {
         const response = await fetch(
@@ -58,11 +59,7 @@ async function logIn() {
         }
         else {
             const currentUser = await response.json()
-            sessionStorage.setItem("id", currentUser["id"])
-            sessionStorage.setItem("userName", currentUser["userName"])
-            sessionStorage.setItem("firstName", currentUser["firstName"])
-            sessionStorage.setItem("lastName", currentUser["lastName"])
-            sessionStorage.setItem("password", currentUser["password"])
+            sessionStorage.setItem("user", JSON.stringify(currentUser));
             window.location = "update.html"
         }
     }

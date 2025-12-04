@@ -20,6 +20,8 @@ namespace Services
 
         public int CheckPassword(string password)
         {
+            if (password.Length == 0)
+                return 0;
             return Zxcvbn.Core.EvaluatePassword(password).Score;
         }
     }
