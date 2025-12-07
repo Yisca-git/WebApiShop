@@ -14,7 +14,7 @@ namespace Repositories
         
         public async Task<IEnumerable<User>> GetUsers()
         {
-           return  _shop_WebApiContext.Users;
+           return await Task.FromResult(_shop_WebApiContext.Users);
         }
 
         public async Task<User> GetUserById(int id)
@@ -25,7 +25,7 @@ namespace Repositories
 
         public async Task<User> AddUser(User user)
         {
-            await _shop_WebApiContext.AddAsync(user);
+            await _shop_WebApiContext.Users.AddAsync(user);
             await _shop_WebApiContext.SaveChangesAsync();
             return user;
         }

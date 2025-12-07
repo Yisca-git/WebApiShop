@@ -18,15 +18,17 @@ namespace WebApiShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<User>> Get()
+        public async Task<ActionResult<IEnumerable<User>>> Get()
         {
             IEnumerable<User> users = await  _userService.GetUsers();
-            return users;
+            if (users != null && users.Any())
+                return Ok(users);
+            return NoContent();
         }
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get(int id)
+        public async Task<ActionResult<User>> GetById(int id)
         {
             User user = await _userService.GetUserById(id);
             if (user == null)
@@ -43,7 +45,7 @@ namespace WebApiShop.Controllers
             {
                 return BadRequest("Password is not strong enough");
             }
-            return CreatedAtAction(nameof(Get), new { Id = user.UserId }, user);
+            return CreatedAtAction(nameof(GetById), new { Id = user.UserId }, user);
         }
         // POST api/<UsersController>
         [HttpPost("login")]
