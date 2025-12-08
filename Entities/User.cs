@@ -16,4 +16,6 @@ public partial class User
     public string UserLastName { get; set; }
 
     public string UserPassword { get; set; }
+
+    public virtual Order Order { get; set; }
 }

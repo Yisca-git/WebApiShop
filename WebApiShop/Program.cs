@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Repositories;
 using Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -11,12 +12,34 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
 builder.Services.AddScoped<IUserPasswordService, UserPasswordService>();
-builder.Services.AddDbContext<Shop_WebApiContext>(options => options.UseSqlServer
-("Data Source=DESKTOP-55334A9;Initial Catalog=Shop_WebApi;Integrated Security = True;Trust Server Certificate=True"));
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();    
+builder.Services.AddScoped<IOrderService, OrderService>();  
+
+builder.Services.AddDbContext<WebApiShopContext>(options => options.UseSqlServer
+("Data Source=DESKTOP-55334A9;Initial Catalog=WebApiShop;Integrated Security = True;Trust Server Certificate=True"));
 
 builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "My API V1");
+    });
+}
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
