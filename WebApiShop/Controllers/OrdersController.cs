@@ -2,6 +2,7 @@
 using Entities;
 using Repositories;
 using Services;
+using Entities.DTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,16 +27,25 @@ namespace WebApiShop.Controllers
 
         // GET api/<OrdersController>/5
         [HttpGet("{id}")]
-        public async Task<Order> GetOrderById(int id)
+        public async Task<ActionResult<Order>> GetOrderById(int id)
         {
-            return await _orderService.GetOrderById(id);
+            OrderDTO order = await _orderService.GetOrderById(id);
+            if (order == null)
+                return NotFound();
+            return Ok(order);
         }
 
         // POST api/<OrdersController>
         [HttpPost]
-        public async Task<Order> AddOrder([FromBody] Order order)
+        public async Task<ActionResult<OrderDTO>> AddOrder([FromBody] Order order)
+
         {
-            return await _orderService.AddOrder(order);
+            OrderDTO? _order = await _orderService.AddOrder(order);
+            if (_order == null)
+            {
+                return BadRequest("Password is not strong enough");
+            }
+            return CreatedAtAction(nameof(GetOrderById), new { Id = _order.OrderId }, _order); 
         }
 
         // PUT api/<OrdersController>/5

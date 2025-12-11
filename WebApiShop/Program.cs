@@ -19,14 +19,13 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-builder.Services.AddScoped<IOrderItemService, OrderItemService>();
-
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();    
 builder.Services.AddScoped<IOrderService, OrderService>();  
 
 builder.Services.AddDbContext<WebApiShopContext>(options => options.UseSqlServer
 ("Data Source=DESKTOP-55334A9;Initial Catalog=WebApiShop;Integrated Security = True;Trust Server Certificate=True"));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

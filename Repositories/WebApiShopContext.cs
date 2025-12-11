@@ -35,9 +35,7 @@ public partial class WebApiShopContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.Property(e => e.OrderId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("order_id");
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasAnnotation("Relational:DefaultConstraintName", "DF_Orders_order_date")
@@ -45,9 +43,8 @@ public partial class WebApiShopContext : DbContext
             entity.Property(e => e.OrderSum).HasColumnName("order_sum");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.OrderNavigation).WithOne(p => p.Order)
-                .HasForeignKey<Order>(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+            entity.HasOne(d => d.User).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_Orders_Users");
         });
 
@@ -76,6 +73,7 @@ public partial class WebApiShopContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.Price).HasColumnName("price");
             entity.Property(e => e.ProductName)
                 .IsRequired()

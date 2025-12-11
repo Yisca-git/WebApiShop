@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Entities;
+using Entities.DTO;
 using Repositories;
 using Services;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,17 +18,26 @@ namespace WebApiShop.Controllers
         }
         // GET: api/<ProductsController>
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetProducts(string? Description, int? minPrice,
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts(string? Description, int? minPrice,
                        int? maxPrice,[FromQuery] int?[] categoriesId, int ? position, int ? skip)
         {
-            return await _productService.GetProducts(Description, minPrice, maxPrice, categoriesId,  position, skip);
+            IEnumerable<ProductDTO> products = await _productService.GetProducts(Description, minPrice, maxPrice, categoriesId, position, skip);
+            if (products.Count() == 0)
+            {
+                return NoContent();
+            }
+            return Ok(products);
+   
         }
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public async Task<Product> GetProductById(int id)
+        public async Task<ActionResult<ProductDTO>> GetProductById(int id)
         {
-            return await _productService.GetProductById(id);
+            ProductDTO product = await _productService.GetProductById(id);
+            if (product == null)
+                return NotFound();
+            return Ok(product);
         }
 
         // POST api/<ProductsController>
