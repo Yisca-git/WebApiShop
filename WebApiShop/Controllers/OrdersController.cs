@@ -2,7 +2,7 @@
 using Entities;
 using Repositories;
 using Services;
-using Entities.DTO;
+using Entities.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -45,7 +45,7 @@ namespace WebApiShop.Controllers
             {
                 return BadRequest("Password is not strong enough");
             }
-            return CreatedAtAction(nameof(GetOrderById), new { Id = _order.OrderId }, _order); 
+            return CreatedAtAction(nameof(GetOrderById), new { Id = _order.Id }, _order); 
         }
 
         // PUT api/<OrdersController>/5

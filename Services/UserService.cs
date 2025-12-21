@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
-using Entities.DTO;
+using Entities.DTOs;
 
 using Repositories;
 
@@ -36,7 +36,7 @@ namespace Services
 
         public async Task<UserDTO> AddUser(User NewUser)
         {
-            if (_userPasswordService.CheckPassword(NewUser.UserPassword) <= 2)
+            if (_userPasswordService.CheckPassword(NewUser.Password) <= 2)
             {
                 return null;
             }
@@ -54,7 +54,7 @@ namespace Services
 
         public async Task<bool> UpdateUser(int id, User updateUser)
         {
-            if (_userPasswordService.CheckPassword(updateUser.UserPassword) <= 2)
+            if (_userPasswordService.CheckPassword(updateUser.Password) <= 2)
             {
                 return false;
             }

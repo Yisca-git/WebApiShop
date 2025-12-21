@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTO
+namespace Entities.DTOs
 {
     public record ProductDTO
     (
-        int ProductId,
+        int Id,
         [Required]
-        string ProductName,
+        string Name,
         [Required]
         int Price,
         string CategoryName,

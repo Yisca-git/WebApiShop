@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Entities;
-using Entities.DTO;
+using Entities.DTOs;
 using Repositories;
 using Services;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,9 +13,12 @@ namespace WebApiShop.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UsersController(IUserService userService)
+        private readonly ILogger<UsersController> _logger;
+
+        public UsersController(IUserService userService, ILogger<UsersController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -48,7 +51,7 @@ namespace WebApiShop.Controllers
             {
                 return BadRequest("Password is not strong enough");
             }
-            return CreatedAtAction(nameof(GetUserById), new { Id = user.UserId }, user);
+            return CreatedAtAction(nameof(GetUserById), new { Id = user.Id }, user);
         }
         // POST api/<UsersController>
         [HttpPost("login")]
@@ -57,8 +60,14 @@ namespace WebApiShop.Controllers
             UserLoginDTO user = await _userService.LogIn(loginUser);
             if (user == null)
                 return Unauthorized("שם משתמש או סיסמא שגויים");
-            return Ok(user);
+            else
+            {
+               _logger.LogInformation("User logged in: " + JsonSerializer.Serialize(user));
+              
+                return Ok(user);
+            }
         }
+                
 
         // PUT api/<Users>/5
         [HttpPut("{id}")]

@@ -2,18 +2,17 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Entities;
 
 public partial class Order
 {
-    public int OrderId { get; set; }
+    public int Id { get; set; }
 
-    public DateOnly OrderDate { get; set; }
-    [Required]
-    public int OrderSum { get; set; }
-    [Required]
+    public DateOnly Date { get; set; }
+
+    public int Sum { get; set; }
+
     public int? UserId { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

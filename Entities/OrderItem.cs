@@ -7,7 +7,7 @@ namespace Entities;
 
 public partial class OrderItem
 {
-    public int OrderItemId { get; set; }
+    public int Id { get; set; }
 
     public int ProductId { get; set; }
 

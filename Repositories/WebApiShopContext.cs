@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Entities;
+
 namespace Repositories;
 
 public partial class WebApiShopContext : DbContext
@@ -27,20 +28,20 @@ public partial class WebApiShopContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.Property(e => e.CategoryId).HasColumnName("category_id");
-            entity.Property(e => e.CategoryName)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
                 .IsRequired()
-                .HasColumnName("category_name");
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.Property(e => e.OrderId).HasColumnName("order_id");
-            entity.Property(e => e.OrderDate)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
                 .HasAnnotation("Relational:DefaultConstraintName", "DF_Orders_order_date")
-                .HasColumnName("order_date");
-            entity.Property(e => e.OrderSum).HasColumnName("order_sum");
+                .HasColumnName("date");
+            entity.Property(e => e.Sum).HasColumnName("sum");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
@@ -52,7 +53,7 @@ public partial class WebApiShopContext : DbContext
         {
             entity.ToTable("Order_items");
 
-            entity.Property(e => e.OrderItemId).HasColumnName("order_item_id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
@@ -70,14 +71,14 @@ public partial class WebApiShopContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
-            entity.Property(e => e.Price).HasColumnName("price");
-            entity.Property(e => e.ProductName)
+            entity.Property(e => e.Name)
                 .IsRequired()
-                .HasColumnName("product_name");
+                .HasColumnName("name");
+            entity.Property(e => e.Price).HasColumnName("price");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
@@ -87,23 +88,23 @@ public partial class WebApiShopContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.UserFirstName)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.FirstName)
                 .IsRequired()
                 .IsUnicode(false)
-                .HasColumnName("user_first_name");
-            entity.Property(e => e.UserLastName)
+                .HasColumnName("first_name");
+            entity.Property(e => e.LastName)
                 .IsRequired()
                 .IsUnicode(false)
-                .HasColumnName("user_last_name");
-            entity.Property(e => e.UserName)
+                .HasColumnName("last_name");
+            entity.Property(e => e.Name)
                 .IsRequired()
                 .IsUnicode(false)
-                .HasColumnName("user_name");
-            entity.Property(e => e.UserPassword)
+                .HasColumnName("name");
+            entity.Property(e => e.Password)
                 .IsRequired()
                 .IsUnicode(false)
-                .HasColumnName("user_password");
+                .HasColumnName("password");
         });
 
         OnModelCreatingPartial(modelBuilder);

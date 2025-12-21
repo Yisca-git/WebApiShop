@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities;
-using Entities.DTO;
+using Entities.DTOs;
 namespace Services
 {
     public class AutoMapping : Profile
@@ -16,9 +16,9 @@ namespace Services
             CreateMap<User, UserLoginDTO>();
             CreateMap<Category, CategoryDTO>();
             CreateMap<Order, OrderDTO>();
-            CreateMap<Product, ProductDTO>()
-                .ForMember(dest => dest.CategoryName,
-                   opt => opt.MapFrom(src => src.Category.CategoryName));
+            CreateMap<Product, ProductDTO>();
+            CreateMap<OrderItem, OrderItemDTO>();
+
 
         }
     }

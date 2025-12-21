@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Entities;
-using Entities.DTO;
+using Entities.DTOs;
 using Repositories;
 using Services;
 

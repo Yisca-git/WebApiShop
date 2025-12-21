@@ -32,7 +32,7 @@ namespace Repositories
 
         public async Task<User> LogIn(User loginUser)
         {
-            User? user = await WebApiShopContext.Users.FirstOrDefaultAsync(u => (u.UserName == loginUser.UserName && u.UserPassword == loginUser.UserPassword));
+            User? user = await WebApiShopContext.Users.FirstOrDefaultAsync(u => (u.Name == loginUser.Name && u.Password == loginUser.Password));
             return user;
         }
 

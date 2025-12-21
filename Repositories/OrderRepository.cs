@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories
 {
@@ -23,7 +24,8 @@ namespace Repositories
         }
         public async Task<Order> GetOrderById(int id)
         {
-            return await WebApiShopContext.Orders.FindAsync(id);
+            return await WebApiShopContext.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product).FirstOrDefaultAsync(o => o.Id == id);
+
         }
     }
 }

@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTO
+namespace Entities.DTOs
 {
     public record OrderDTO
     (
-        int OrderId,
-        DateOnly OrderDate,
+        int Id,
+        DateOnly Date,
         [Required]
-        int OrderSum
-        //Dictionary<string,int>  OrderItems
+        int Sum,        
+        List<OrderItemDTO> OrderItems
     );
     
 }
