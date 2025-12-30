@@ -17,10 +17,28 @@ namespace Tests
             _webApiShopContext = databaseFixture.Context;
             _userRepository = new UserRepository(_webApiShopContext);
         }
+        // Setup method to initialize the database state before each test
+        private async Task Setup()
+        {
+            // Clear existing data in the Users table
+            _webApiShopContext.Users.RemoveRange(_webApiShopContext.Users);
+            await _webApiShopContext.SaveChangesAsync();
+        }
+
+        // Teardown method to clear the database after each test
+        private async Task Teardown()
+        {
+            // Clear data in the Users table
+            _webApiShopContext.Users.RemoveRange(_webApiShopContext.Users);
+            await _webApiShopContext.SaveChangesAsync();
+        }
+
         [Fact]
         public async Task addUser()
         {
             // Arrange
+            await Setup();
+
             var newUser = new User
             {
                 Name = "newuser@example.com",
@@ -35,12 +53,17 @@ namespace Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(newUser.Name, result.Name);
+
+            // Teardown
+            await Teardown();
         }
 
         [Fact]
         public async Task getUserById()
         {
             // Arrange
+            await Setup();
+
             var user = new User
             {
                 Name = "existinguser@example.com",
@@ -57,12 +80,17 @@ namespace Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(user.Name, result.Name);
+
+            // Teardown
+            await Teardown();
         }
 
         [Fact]
         public async Task logIn()
         {
             // Arrange
+            await Setup();
+
             var user = new User
             {
                 Name = "loginuser@example.com",
@@ -80,13 +108,16 @@ namespace Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(user.Name, result.Name);
+
+            // Teardown
+            await Teardown();
         }
 
         [Fact]
         public async Task LogIn_InvalidCredentials()
         {
             // Arrange
-            // Attempt to log in with incorrect credentials
+            await Setup();
 
             var loginUser = new User { Name = "wronguser@example.com", Password = "Wrongpassword11!!" };
 
@@ -95,12 +126,17 @@ namespace Tests
 
             // Assert
             Assert.Null(result);
+
+            // Teardown
+            await Teardown();
         }
 
         [Fact]
         public async Task getUsers()
         {
             // Arrange
+            await Setup();
+
             var user1 = new User
             {
                 Name = "user1@example.com",
@@ -125,20 +161,26 @@ namespace Tests
 
             // Assert
             Assert.NotNull(result);
-            //Assert.Equal(2, result.Count);
+            // Assert.Equal(2, result.Count); // Uncomment this line if necessary
+
+            // Teardown
+            await Teardown();
         }
 
         [Fact]
         public async Task GetUserById_NotFound()
         {
             // Arrange
-            // No user with this ID exists
+            await Setup();
 
             // Act
             var result = await _userRepository.GetUserById(999); // Assuming 999 does not exist
 
             // Assert
             Assert.Null(result);
+
+            // Teardown
+            await Teardown();
         }
     }
 }

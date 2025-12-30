@@ -18,52 +18,56 @@ namespace Tests
             _webApiShopContext = databaseFixture.Context;
             _productRepository = new ProductRepository(_webApiShopContext);
         }
+        // Setup method to initialize the database state before each test
+        private async Task Setup()
+        {
+            // Clear existing data in the Products and Categories
+            _webApiShopContext.Products.RemoveRange(_webApiShopContext.Products);
+            _webApiShopContext.Categories.RemoveRange(_webApiShopContext.Categories);
+            await _webApiShopContext.SaveChangesAsync();
+        }
+
+        // Teardown method to clear the database after each test
+        private async Task Teardown()
+        {
+            // Clear data in the Products and Categories tables
+            _webApiShopContext.Products.RemoveRange(_webApiShopContext.Products);
+            _webApiShopContext.Categories.RemoveRange(_webApiShopContext.Categories);
+            await _webApiShopContext.SaveChangesAsync();
+        }
+
         [Fact]
         public async Task GetProducts()
         {
             // Arrange
-            var category = new Category
-            {
-                Name = "Electronics"
-            };
-
-            var product1 = new Product
-            {
-                Name = "Product 1",
-                CategoryId = 1,
-                Description = "Description for Product 1",
-                Price = 10,
-                ImageUrl = "a.jpg"
-            };
-
-            var product2 = new Product
-            {
-                Name = "Product 2",
-                CategoryId = 1,
-                Description = "Description for Product 2",
-                Price = 15,
-                ImageUrl = "a.jpg"
-            };
-
+            var category = new Category { Name = "Electronics" };
             await _webApiShopContext.Categories.AddAsync(category);
-            await _webApiShopContext.Products.AddAsync(product1);
-            await _webApiShopContext.Products.AddAsync(product2);
+            await _webApiShopContext.SaveChangesAsync();
+
+            var product1 = new Product { Name = "Laptop", Description = "High performance laptop", Price = 1200, CategoryId = 1, ImageUrl = "a.png" };
+            var product2 = new Product { Name = "Smartphone", Description = "Latest model smartphone", Price = 800, CategoryId = 1, ImageUrl = "a.png" };
+            var product3 = new Product { Name = "Headphones", Description = "Noise cancelling headphones", Price = 100, CategoryId = 1, ImageUrl = "a.png" };
+
+            await _webApiShopContext.Products.AddRangeAsync(product1, product2, product3);
             await _webApiShopContext.SaveChangesAsync();
 
             // Act
-            var result = await _productRepository.GetProducts(null, null, null, null, null, null);
+            var (items, totalCount) = await _productRepository.GetProducts("smart", 50, 1000, new int[] { 1 });
 
             // Assert
-            Assert.NotNull(result);
-            //Assert.Equal(2, result.Count);
-            Assert.Contains(result, p => p.Name == product1.Name);
-            Assert.Contains(result, p => p.Name == product2.Name);
+            Assert.NotNull(items);
+            Assert.Single(items);
+            Assert.Equal(1, totalCount);
+            Assert.Equal("Smartphone", items.First().Name); // Verify the returned product is the smartphone
         }
+
 
         [Fact]
         public async Task GetProductById()
         {
             // Arrange
+            await Setup();
+
             var category = new Category
             {
                 Name = "Books"
@@ -88,20 +92,25 @@ namespace Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(product.Name, result.Name);
+
+            // Teardown
+            await Teardown();
         }
 
         [Fact]
         public async Task GetById_NotFound()
         {
             // Arrange
-            // No product with this ID exists
+            await Setup();
 
             // Act
             var result = await _productRepository.GetProductById(999); // Assuming 999 does not exist
 
             // Assert
             Assert.Null(result);
-        }
 
+            // Teardown
+            await Teardown();
+        }
     }
 }

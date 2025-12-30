@@ -14,28 +14,31 @@ namespace Tests
     public class ProductRepositoryUnitTesting
     {
         [Fact]
-        public async Task GetProducts_ReturnsProducts()
+        public async Task GetProducts_ReturnsFilteredProducts()
         {
             // Arrange
             var _mockContext = new Mock<WebApiShopContext>();
+            var categoryId = 1;
             var products = new List<Product>
             {
-                new Product {Id=1, Name = "Product1", Price = 100, Description = "Description1", CategoryId = 1 },
-                new Product {Id=2, Name = "Product2", Price = 200, Description = "Description2", CategoryId = 2 }
+                new Product { Id = 1, Name = "Laptop", Description = "High performance laptop", Price = 1200, CategoryId = categoryId },
+                new Product { Id = 2, Name = "Smartphone", Description = "Latest model smartphone", Price = 800, CategoryId = categoryId },
+                new Product { Id = 3, Name = "Headphones", Description = "Noise cancelling headphones", Price = 100, CategoryId = categoryId }
             };
 
             _mockContext.Setup(ctx => ctx.Products).ReturnsDbSet(products);
             var _productRepository = new ProductRepository(_mockContext.Object);
-
+            int[] c = { categoryId };
             // Act
-            var result = await _productRepository.GetProducts(null, null, null, null, null, null);
+            var (items, totalCount) = await _productRepository.GetProducts("smart", 50, 1000, c, 1, 2);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
-            Assert.Contains(result, r => r.Name == "Product1");
-            Assert.Contains(result, r => r.Name == "Product2");
+            Assert.NotNull(items);
+            Assert.Single(items);
+            Assert.Equal(1, totalCount);
+            Assert.Equal("Smartphone", items.First().Name); // Verify the returned product is the smartphone
         }
+
 
         [Fact]
         public async Task GetProducts_ReturnsEmptyList()
@@ -48,11 +51,11 @@ namespace Tests
             var _productRepository = new ProductRepository(_mockContext.Object);
 
             // Act
-            var result = await _productRepository.GetProducts(null, null, null, null, null, null);
+            var result = await _productRepository.GetProducts(null, null, null, null, 1, 8);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Empty(result);
+            Assert.Empty(result.items);
         }
 
         [Fact]
@@ -60,7 +63,7 @@ namespace Tests
         {
             // Arrange
             var _mockContext = new Mock<WebApiShopContext>();
-            var product = new Product { Id=1, Name = "Product1", Price = 100, Description = "Description1", CategoryId = 1 };
+            var product = new Product { Id = 1, Name = "Product1", Price = 100, Description = "Description1", CategoryId = 1 };
             var products = new List<Product> { product };
 
             _mockContext.Setup(ctx => ctx.Products).ReturnsDbSet(products);

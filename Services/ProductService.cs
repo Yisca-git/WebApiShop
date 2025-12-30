@@ -21,12 +21,21 @@ namespace Services
 
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetProducts(string? Description, int? minPrice,
-                       int? maxPrice, int?[] categoriesId, int  ? position , int  ? skip)
+        public async Task<FinalProducts> GetProducts(string? Description, int? minPrice,
+                       int? maxPrice, int[] categoriesId, int position = 1 , int skip = 8)
         {
-            IEnumerable<Product> products = await _productRepository.GetProducts(Description, minPrice, maxPrice, categoriesId, position, skip);
-            IEnumerable<ProductDTO> productDTOs = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDTO>>(products);
-            return productDTOs;
+            (List<Product> items, int TotalCount) products = await _productRepository.GetProducts(Description, minPrice, maxPrice, categoriesId, position, skip);
+            List<ProductDTO> productDTOs = _mapper.Map<List<Product>, List<ProductDTO>>(products.items);
+            bool hasNext = (products.TotalCount - (position * skip)) > 0;
+            bool hasPrev = position > 1;
+            FinalProducts finalProducts = new()
+            {
+                Products = productDTOs,
+                TotalCount = products.TotalCount,
+                HasNext = hasNext,
+                HasPrev = hasPrev
+            };
+            return finalProducts;
         }
         public async Task<ProductDTO> GetProductById(int id)
         {

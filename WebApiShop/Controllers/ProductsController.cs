@@ -18,11 +18,11 @@ namespace WebApiShop.Controllers
         }
         // GET: api/<ProductsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts(string? Description, int? minPrice,
-                       int? maxPrice,[FromQuery] int?[] categoriesId, int ? position, int ? skip)
+        public async Task<ActionResult<FinalProducts>> GetProducts(string? Description, int? minPrice,
+                       int? maxPrice,[FromQuery] int[] categoriesId, int position =1 , int skip = 8)
         {
-            IEnumerable<ProductDTO> products = await _productService.GetProducts(Description, minPrice, maxPrice, categoriesId, position, skip);
-            if (products.Count() == 0)
+            FinalProducts products = await _productService.GetProducts(Description, minPrice, maxPrice, categoriesId, position, skip);
+            if (products.Products.Count() == 0)
             {
                 return NoContent();
             }
