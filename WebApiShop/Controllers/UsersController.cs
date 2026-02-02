@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Entities;
+using Entities.DTOs;
 using Repositories;
 using Services;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,25 +13,30 @@ namespace WebApiShop.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UsersController(IUserService userService)
+        private readonly ILogger<UsersController> _logger;
+
+        public UsersController(IUserService userService, ILogger<UsersController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> Get()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            IEnumerable<User> users = await  _userService.GetUsers();
-            if (users != null && users.Any())
-                return Ok(users);
-            return NoContent();
+            IEnumerable<UserDTO> users = await  _userService.GetUsers();
+            if(users.Count() == 0)
+            {
+                return NoContent();
+            }
+            return Ok(users);
         }
 
         // GET api/<Users>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetById(int id)
+        public async Task<ActionResult<UserDTO>> GetUserById(int id)
         {
-            User user = await _userService.GetUserById(id);
+            UserDTO user = await _userService.GetUserById(id);
             if (user == null)
                 return NotFound();
             return Ok(user);
@@ -38,24 +44,30 @@ namespace WebApiShop.Controllers
 
         // POST api/<Users>
         [HttpPost]
-        public async Task<ActionResult<User>> AddUser([FromBody] User newUser)
+        public async Task<ActionResult<UserDTO>> AddUser([FromBody] User newUser)
         {
-            User? user = await _userService.AddUser(newUser);
+            UserDTO? user = await _userService.AddUser(newUser);
             if(user == null)
             {
                 return BadRequest("Password is not strong enough");
             }
-            return CreatedAtAction(nameof(GetById), new { Id = user.UserId }, user);
+            return CreatedAtAction(nameof(GetUserById), new { Id = user.Id }, user);
         }
         // POST api/<UsersController>
         [HttpPost("login")]
-        public async Task<ActionResult<User>> LogIn([FromBody] User loginUser)
+        public async Task<ActionResult<UserLoginDTO>> LogIn([FromBody] User loginUser)
         {
-            User user = await _userService.LogIn(loginUser);
+            UserLoginDTO user = await _userService.LogIn(loginUser);
             if (user == null)
                 return Unauthorized("שם משתמש או סיסמא שגויים");
-            return Ok(user);
+            else
+            {
+               _logger.LogInformation("User logged in: " + JsonSerializer.Serialize(user));
+              
+                return Ok(user);
+            }
         }
+                
 
         // PUT api/<Users>/5
         [HttpPut("{id}")]
@@ -64,7 +76,7 @@ namespace WebApiShop.Controllers
             bool isUpdateSuccessful = await _userService.UpdateUser(id, updateUser);
             if (isUpdateSuccessful)
             {
-                User? updatedUserFromDb = await _userService.GetUserById(id);
+                UserDTO? updatedUserFromDb = await _userService.GetUserById(id);
                 return Ok(updatedUserFromDb);
             }
             return BadRequest("Password is not strong enough");

@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 5,
-   "ContextClassName": "Shop_WebApiContext",
+   "ContextClassName": "WebApiShopContext",
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
@@ -18,6 +18,22 @@
    "SingularRules": null,
    "T4TemplatePath": null,
    "Tables": [
+      {
+         "Name": "[dbo].[Categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Order_items]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Orders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Products]",
+         "ObjectType": 0
+      },
       {
          "Name": "[dbo].[Users]",
          "ObjectType": 0
