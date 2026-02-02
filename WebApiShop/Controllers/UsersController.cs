@@ -59,7 +59,7 @@ namespace WebApiShop.Controllers
         {
             UserLoginDTO user = await _userService.LogIn(loginUser);
             if (user == null)
-                return Unauthorized("שם משתמש או סיסמא שגויים");
+                return Unauthorized("Invalid username or password");
             else
             {
                _logger.LogInformation("User logged in: " + JsonSerializer.Serialize(user));

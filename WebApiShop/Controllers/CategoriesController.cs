@@ -13,11 +13,13 @@ namespace WebApiShop.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-
         private readonly ICategoryService _categoryService;
-        public CategoriesController(ICategoryService categoryService)
+        private readonly ILogger<CategoriesController> _logger;
+
+        public CategoriesController(ICategoryService categoryService, ILogger<CategoriesController> logger)
         {
             _categoryService = categoryService;
+            _logger = logger;
         }
         // GET: api/<CategoriesController>
         [HttpGet]
@@ -32,12 +34,7 @@ namespace WebApiShop.Controllers
           
         }
 
-        // GET api/<CategoriesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        
 
        
     }
