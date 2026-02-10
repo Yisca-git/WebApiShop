@@ -5,19 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+
 namespace Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly WebApiShopContext WebApiShopContext;
-        public CategoryRepository(WebApiShopContext _WebApiShopContext)
+        private readonly EventDressRentalContext _eventDressRentalContext;
+        public CategoryRepository(EventDressRentalContext eventDressRentalContext)
         {
-            WebApiShopContext = _WebApiShopContext;
+            _eventDressRentalContext = eventDressRentalContext;
         }
 
-        public async Task<IEnumerable<Category>> GetCategories()
+        public async Task<List<Category>> GetCategories()
         {
-            return await WebApiShopContext.Categories.ToListAsync();
+            return await _eventDressRentalContext.Categories.ToListAsync();
+        }
+
+        public async Task<Category> AddCategory(Category category)
+        {
+            await _eventDressRentalContext.Categories.AddAsync(category);
+            await _eventDressRentalContext.SaveChangesAsync();
+            return category;
+
         }
 
 

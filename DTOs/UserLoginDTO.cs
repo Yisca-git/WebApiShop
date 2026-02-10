@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTOs
+namespace DTOs
 {
     public record UserLoginDTO
     (
-        [EmailAddress, Required]
-        string Name,
+        [Required]
+        string FirstName,
+        [Required]
+        string LastName,
         [Required]
         string Password
     );

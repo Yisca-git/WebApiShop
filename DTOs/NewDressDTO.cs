@@ -5,19 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTOs
+namespace DTOs
 {
-    public record ProductDTO
+    public record NewDressDTO
     (
-        int Id,
         [Required]
-        string Name,
+        int ModelId,
+        [Required]
+        string Size,
         [Required]
         int Price,
-        string CategoryName,
-        string Description,
-        string ImageUrl 
+        string Note
     );
-
     
 }

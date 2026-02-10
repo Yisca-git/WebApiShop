@@ -5,21 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities;
-using Entities.DTOs;
+using DTOs;
 namespace Services
 {
     public class AutoMapping : Profile
     {
         public AutoMapping()
         {
-            CreateMap<User, UserDTO>();
-            CreateMap<User, UserLoginDTO>();
-            CreateMap<Category, CategoryDTO>();
-            CreateMap<Order, OrderDTO>();
-            CreateMap<Product, ProductDTO>();
-            CreateMap<OrderItem, OrderItemDTO>();
-
-
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserLoginDTO>().ReverseMap();
+            CreateMap<User, UserRegisterDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>().ReverseMap();
+            CreateMap<Order, NewOrderDTO>().ReverseMap();
+            CreateMap<OrderItem, NewOrderItemDTO>().ReverseMap();
+            CreateMap<Model, ModelDTO>().ReverseMap();
+            CreateMap<Model, NewModelDTO>().ReverseMap();
+            CreateMap<Dress, DressDTO>().ReverseMap();
+            CreateMap<Dress, NewDressDTO>().ReverseMap();
         }
     }
 }

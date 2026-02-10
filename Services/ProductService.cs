@@ -11,10 +11,10 @@ namespace Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IModelRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IModelRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;

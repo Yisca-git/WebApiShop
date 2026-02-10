@@ -20,13 +20,13 @@ builder.Services.AddScoped<IUserPasswordService, UserPasswordService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IModelRepository, ModelRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();    
 builder.Services.AddScoped<IOrderService, OrderService>();  
 
-builder.Services.AddDbContext<WebApiShopContext>(options => options.UseSqlServer
+builder.Services.AddDbContext<EventDressRentalContext>(options => options.UseSqlServer
 (builder.Configuration.GetConnectionString("Home")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

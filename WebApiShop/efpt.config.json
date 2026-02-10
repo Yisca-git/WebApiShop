@@ -11,7 +11,7 @@
    "OutputPath": "Models",
    "PluralRules": null,
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "Repositories",
+   "ProjectRootNamespace": "WebApiShop",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 2,
    "SelectedToBeGenerated": 0,
@@ -35,11 +35,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Order_items]",
+         "Name": "[dbo].[Orders]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Orders]",
+         "Name": "[dbo].[Orders_items]",
          "ObjectType": 0
       },
       {

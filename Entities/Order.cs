@@ -9,11 +9,15 @@ public partial class Order
 {
     public int Id { get; set; }
 
-    public DateOnly Date { get; set; }
+    public DateOnly OrderDate { get; set; }
 
-    public int Sum { get; set; }
+    public DateOnly EventDate { get; set; }
 
-    public int? UserId { get; set; }
+    public int FinalPrice { get; set; }
+
+    public int UserId { get; set; }
+
+    public string Note { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 

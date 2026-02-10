@@ -6,33 +6,34 @@ namespace Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly WebApiShopContext WebApiShopContext;
-        public UserRepository(WebApiShopContext _WebApiShopContext)
+        private readonly EventDressRentalContext _eventDressRentalContext;
+        public UserRepository(EventDressRentalContext eventDressRentalContext)
         {
-            WebApiShopContext = _WebApiShopContext;
+            _eventDressRentalContext = eventDressRentalContext;
         }
         
         public async Task<IEnumerable<User>> GetUsers()
         {
-           return await WebApiShopContext.Users.ToListAsync();
+           return await _eventDressRentalContext.Users.ToListAsync();
         }
 
         public async Task<User> GetUserById(int id)
         {
-           User? userById = await WebApiShopContext.Users.FindAsync(id);
+           User? userById = await _eventDressRentalContext.Users.FindAsync(id);
            return userById;
         }
 
         public async Task<User> AddUser(User user)
         {
-            await WebApiShopContext.Users.AddAsync(user);
-            await WebApiShopContext.SaveChangesAsync();
+            await _eventDressRentalContext.Users.AddAsync(user);
+            await _eventDressRentalContext.SaveChangesAsync();
             return user;
         }
 
         public async Task<User> LogIn(User loginUser)
         {
-            User? user = await WebApiShopContext.Users.FirstOrDefaultAsync(u => (u.Name == loginUser.Name && u.Password == loginUser.Password));
+            User? user = await _eventDressRentalContext.Users.FirstOrDefaultAsync
+                (u => (u.FirstName == loginUser.FirstName && u.LastName == loginUser.LastName && u.Password == loginUser.Password));
             return user;
         }
 
@@ -43,9 +44,9 @@ namespace Repositories
             {
                 return null;
             }
-            
-            WebApiShopContext.Entry(UserToUpdate).CurrentValues.SetValues(updateUser);
-            await WebApiShopContext.SaveChangesAsync();
+
+            _eventDressRentalContext.Entry(UserToUpdate).CurrentValues.SetValues(updateUser);
+            await _eventDressRentalContext.SaveChangesAsync();
             return UserToUpdate;
         }
 

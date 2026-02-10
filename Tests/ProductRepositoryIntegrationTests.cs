@@ -12,7 +12,7 @@ namespace Tests
     public class ProductRepositoryIntegrationTests : IClassFixture<DatabaseFixture>
     {
         private readonly WebApiShopContext _webApiShopContext;
-        private readonly ProductRepository _productRepository;
+        private readonly ModelRepository _productRepository;
         public ProductRepositoryIntegrationTests(DatabaseFixture databaseFixture)
         {
             _webApiShopContext = databaseFixture.Context;

@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTOs
+namespace DTOs
 {
-    public record CategoryDTO
+    public record NewOrderItemDTO
     (
-        
-        int Id,
         [Required]
-        string Name
-   
+        int DressId,
+        [Required]
+        int DressPrice
     );
-
 }

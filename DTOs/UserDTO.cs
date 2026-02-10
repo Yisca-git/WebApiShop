@@ -5,17 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTOs
+namespace DTOs
 {
     public record UserDTO
     (
+        [Required]
         int Id,
-        [EmailAddress, Required]
-        string Name,
         [Required]
         string FirstName,
         [Required]
         string LastName,
+        [EmailAddress]
+        string Email,
+        [Phone, Required]
+        string Phone,
         [Required]
         string Password
     );
