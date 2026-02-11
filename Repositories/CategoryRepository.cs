@@ -26,7 +26,6 @@ namespace Repositories
             await _eventDressRentalContext.Categories.AddAsync(category);
             await _eventDressRentalContext.SaveChangesAsync();
             return category;
-
         }
 
 

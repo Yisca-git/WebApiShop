@@ -19,7 +19,11 @@ public partial class Order
 
     public string Note { get; set; }
 
+    public int StatusId { get; set; }
+
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+    public virtual Status Status { get; set; }
 
     public virtual User User { get; set; }
 }

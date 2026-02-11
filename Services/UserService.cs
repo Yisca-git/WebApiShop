@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
-using Entities.DTOs;
+using DTOs;
 
 using Repositories;
 
@@ -20,46 +20,52 @@ namespace Services
             _mapper = mapper;
         }
         
-        public async Task<IEnumerable<UserDTO>> GetUsers()
+        public async Task<List<UserDTO>> GetUsers()
         {
-            IEnumerable <User> users = await _userRepository.GetUsers();
-            IEnumerable<UserDTO> userDTOs = _mapper.Map< IEnumerable<User> ,IEnumerable <UserDTO>>(users);
+            List<User> users = await _userRepository.GetUsers();
+            List<UserDTO> userDTOs = _mapper.Map<List<User> , List<UserDTO>>(users);
             return userDTOs;
         }
 
         public async Task<UserDTO> GetUserById(int id)
         {
-            User user = await _userRepository.GetUserById(id);
+            User? user = await _userRepository.GetUserById(id);
+            if(user == null)
+            {
+                throw new Exception("User not found");
+            }
             UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
             return userDTO;
         }
 
-        public async Task<UserDTO> AddUser(User NewUser)
+        public async Task<UserDTO> AddUser(UserRegisterDTO NewUser)
         {
             if (_userPasswordService.CheckPassword(NewUser.Password) <= 2)
             {
                 return null;
             }
-            User user = await _userRepository.AddUser(NewUser);
+            User userRegister = _mapper.Map<UserRegisterDTO, User>(NewUser);
+            User user = await _userRepository.AddUser(userRegister);
             UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
             return userDTO;
         }
 
-        public async Task<UserLoginDTO> LogIn(User loginUser)
+        public async Task<UserDTO> LogIn(UserLoginDTO exsistUser)
         {
-            User user = await _userRepository.LogIn(loginUser);
-            UserLoginDTO userLoginDTO = _mapper.Map<User, UserLoginDTO>(user);
+            User LogInUser = _mapper.Map<UserLoginDTO, User>(exsistUser);
+            User user = await _userRepository.LogIn(LogInUser);
+            UserDTO userLoginDTO = _mapper.Map<User, UserDTO>(user);
             return userLoginDTO;
         }
 
-        public async Task<bool> UpdateUser(int id, User updateUser)
+        public async Task UpdateUser(int id, UserDTO updateUser)
         {
             if (_userPasswordService.CheckPassword(updateUser.Password) <= 2)
             {
-                return false;
+                return;
             }
-            await _userRepository.UpdateUser(id, updateUser);
-            return true;
+            User user = _mapper.Map<UserDTO, User>(updateUser);
+            await _userRepository.UpdateUser(id, user);
         }
     }
 }

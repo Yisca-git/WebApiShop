@@ -25,6 +25,8 @@ public partial class EventDressRentalContext : DbContext
 
     public virtual DbSet<Rating> Ratings { get; set; }
 
+    public virtual DbSet<Status> Statuses { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +43,10 @@ public partial class EventDressRentalContext : DbContext
         modelBuilder.Entity<Dress>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasAnnotation("Relational:DefaultConstraintName", "DF_Dresses_is_active")
+                .HasColumnName("is_active");
             entity.Property(e => e.ModelId).HasColumnName("model_id");
             entity.Property(e => e.Note)
                 .HasColumnType("text")
@@ -72,6 +78,10 @@ public partial class EventDressRentalContext : DbContext
             entity.Property(e => e.ImgUrl)
                 .IsRequired()
                 .HasColumnName("img_url");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasAnnotation("Relational:DefaultConstraintName", "DF_Models_is_active")
+                .HasColumnName("is_active");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("name");
@@ -106,7 +116,13 @@ public partial class EventDressRentalContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasAnnotation("Relational:DefaultConstraintName", "DF_Orders_order_date")
                 .HasColumnName("order_date");
+            entity.Property(e => e.StatusId).HasColumnName("status_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Orders_Statuses");
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
@@ -157,6 +173,16 @@ public partial class EventDressRentalContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("REFERER");
             entity.Property(e => e.UserAgent).HasColumnName("USER_AGENT");
+        });
+
+        modelBuilder.Entity<Status>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Status");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<User>(entity =>

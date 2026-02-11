@@ -25,6 +25,8 @@ namespace DTOs
         string UserLastName,
         string Note,
         [Required]
-        List<DressDTO> Dresses
+        List<DressDTO> Dresses,
+        [Required]
+        string StatusName
     );
 }

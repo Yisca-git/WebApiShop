@@ -19,6 +19,8 @@ public partial class Model
 
     public string Color { get; set; }
 
+    public bool IsActive { get; set; }
+
     public virtual ICollection<Dress> Dresses { get; set; } = new List<Dress>();
 
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();

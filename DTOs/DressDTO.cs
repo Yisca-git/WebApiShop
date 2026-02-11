@@ -19,7 +19,9 @@ namespace DTOs
         [Required]
         string ModelName,
         [Required]
-        string ModelImgUrl
+        string ModelImgUrl,
+        [Required]
+        bool IsActive
 
     );
     

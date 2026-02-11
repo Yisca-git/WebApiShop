@@ -21,7 +21,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<IModelRepository, ModelRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductService, ModelService>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();    
 builder.Services.AddScoped<IOrderService, OrderService>();  

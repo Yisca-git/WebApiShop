@@ -4,8 +4,11 @@ namespace Repositories
 {
     public interface IModelRepository
     {
-        public Task<(List<Product> items, int TotalCount)> GetProducts(string? description, int? minPrice,
-                       int? maxPrice, int[] categoriesId, int  position = 1, int  skip = 8);
-        public Task<Product> GetProductById(int id);
+       public Task<(List<Model> items, int TotalCount)> GetModels(string? description, int? minPrice,
+                       int? maxPrice, int[] categoriesId, string? color, int position = 1, int skip = 8)
+       public Task<Model> GetModelById(int id);
+       public Task<Model> AddModel(Model model);
+       public Task DeleteModel(Model model);
+       public Task UpdateModel(Model model);
     }
 }

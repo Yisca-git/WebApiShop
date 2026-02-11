@@ -1,0 +1,15 @@
+﻿using Entities;
+
+namespace Repositories
+{
+    public interface IDressRepository
+    {
+        Task<Dress> AddDress(Dress dress);
+        Task DeleteDress(Dress dress);
+        Task<Dress> GetDressById(int id);
+        Task UpdateDress(Dress dress);
+        Task<int> GetCountByModelIdAndSizeForDate(int id, string size, DateOnly date);
+        Task<List<string>> GetSizesByModelId(int id);
+
+    }
+}

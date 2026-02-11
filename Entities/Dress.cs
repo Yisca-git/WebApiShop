@@ -17,6 +17,8 @@ public partial class Dress
 
     public string Note { get; set; }
 
+    public bool IsActive { get; set; }
+
     public virtual Model Model { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

@@ -12,7 +12,7 @@ namespace Repositories
             _eventDressRentalContext = eventDressRentalContext;
         }
         
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<List<User>> GetUsers()
         {
            return await _eventDressRentalContext.Users.ToListAsync();
         }

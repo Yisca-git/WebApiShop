@@ -1,15 +1,17 @@
 ﻿using Entities;
-using Entities.DTOs;
+using DTOs;
 
 namespace Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDTO>> GetUsers();
+        Task<List<UserDTO>> GetUsers();
         Task<UserDTO> GetUserById(int id);
 
-        Task<UserDTO> AddUser(User NewUser);
-        Task<UserLoginDTO> LogIn(User loginUser);
-        Task<bool> UpdateUser(int id, User updateUser);
+        Task<UserDTO> AddUser(UserRegisterDTO NewUser);
+        Task<UserDTO> LogIn(UserLoginDTO exsistUser);
+
+        Task UpdateUser(int id, UserDTO updateUser);
+
     }
 }

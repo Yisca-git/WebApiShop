@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities;
-using Entities.DTOs;
+using DTOs;
 using Repositories;
 namespace Services
 {
@@ -21,11 +21,19 @@ namespace Services
 
         }
 
-        public async Task<IEnumerable<CategoryDTO>> GetCategories()
+        public async Task<List<CategoryDTO>> GetCategories()
         {
-            IEnumerable<Category> categories = await _categoryRepository.GetCategories();
-            IEnumerable<CategoryDTO> categoryDTOs = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDTO>>(categories);
+            List<Category> categories = await _categoryRepository.GetCategories();
+            List<CategoryDTO> categoryDTOs = _mapper.Map<List<Category>, List<CategoryDTO>>(categories);
             return categoryDTOs;
         }
+        public async Task<CategoryDTO> AddCategory(CategoryDTO NewCategory)
+        {
+            Category category = _mapper.Map<CategoryDTO, Category>(NewCategory);
+            Category addedCategory = await _categoryRepository.AddCategory(category);
+            CategoryDTO addedCategoryDTO = _mapper.Map<Category, CategoryDTO>(addedCategory);
+            return addedCategoryDTO;
+        }
+
     }
 }
