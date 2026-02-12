@@ -29,6 +29,10 @@ namespace Services
         }
         public async Task<CategoryDTO> AddCategory(CategoryDTO NewCategory)
         {
+            if(NewCategory == null)
+            {
+                throw new ArgumentNullException(nameof(NewCategory));
+            }
             Category category = _mapper.Map<CategoryDTO, Category>(NewCategory);
             Category addedCategory = await _categoryRepository.AddCategory(category);
             CategoryDTO addedCategoryDTO = _mapper.Map<Category, CategoryDTO>(addedCategory);

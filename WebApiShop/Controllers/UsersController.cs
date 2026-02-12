@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Entities;
-using Entities.DTOs;
+using DTOs;
 using Repositories;
 using Services;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,9 +22,9 @@ namespace WebApiShop.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
+        public async Task<ActionResult<List<UserDTO>>> GetUsers()
         {
-            IEnumerable<UserDTO> users = await  _userService.GetUsers();
+            List<UserDTO> users = await  _userService.GetUsers();
             if(users.Count() == 0)
             {
                 return NoContent();

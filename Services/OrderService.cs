@@ -1,12 +1,13 @@
-﻿using System;
+﻿using AutoMapper;
+using DTOs;
+using Entities;
+using Microsoft.Data.SqlClient;
+using Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using Entities;
-using DTOs;
-using Repositories;
 namespace Services
 {
     public class OrderService : IOrderService
@@ -20,9 +21,13 @@ namespace Services
             _mapper = mapper;
 
         }
-        public async Task<OrderDTO> AddOrder(NewOrderDTO NewOrder)
+        public async Task<OrderDTO> AddOrder(NewOrderDTO newOrder)
         {
-            Order order = _mapper.Map<NewOrderDTO, Order>(NewOrder);
+            if (newOrder == null)
+                throw new ArgumentNullException(nameof(newOrder));
+            if (newOrder.OrderDate < DateOnly.FromDateTime(DateTime.Now) || newOrder.EventDate < DateOnly.FromDateTime(DateTime.Now))
+                throw new ArgumentException("Order date or event date cannot be in the past.");
+            Order order = _mapper.Map<NewOrderDTO, Order>(newOrder);
             int sum = 0;
             foreach (var item in order.OrderItems)
             {
@@ -80,6 +85,10 @@ namespace Services
         }
         public async Task UpdateStatusOrder(Order order, int statusId)
         {
+            if(order == null)
+            {
+                throw new Exception(nameof(order));
+            }
             if (statusId < 1 || statusId > 4)
             {
                 throw new Exception("Invalid status id. Status id must be between 1 and 4.");
@@ -89,6 +98,10 @@ namespace Services
         }
         public async Task UpdateOrder(Order order, int orderId)
         {
+            if (order == null)
+            {
+                throw new Exception(nameof(order));
+            }
             if (_orderRepository.GetOrderById(orderId) == null)
             {
                 throw new Exception($"Order with id {orderId} not found.");
