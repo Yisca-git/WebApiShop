@@ -20,7 +20,11 @@ namespace Repositories
         {
             return await _eventDressRentalContext.Categories.ToListAsync();
         }
-
+        public async Task<Category> GetCategoryById(int id)
+        {
+            Category? categoryById = await _eventDressRentalContext.Categories.FindAsync(id);
+            return categoryById;
+        }
         public async Task<Category> AddCategory(Category category)
         {
             await _eventDressRentalContext.Categories.AddAsync(category);

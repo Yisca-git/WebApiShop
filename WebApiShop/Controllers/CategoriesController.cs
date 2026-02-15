@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using Entities;
-using Entities.DTOs;
+using DTOs;
 using Repositories;
 using Services;
 
@@ -21,9 +20,9 @@ namespace WebApiShop.Controllers
         }
         // GET: api/<CategoriesController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
+        public async Task<ActionResult<List<CategoryDTO>>> GetCategories()
         {
-            IEnumerable<CategoryDTO> categories = await _categoryService.GetCategories();
+            List<CategoryDTO> categories = await _categoryService.GetCategories();
             if (categories.Count() == 0)
             {
                 return NoContent();
@@ -31,13 +30,23 @@ namespace WebApiShop.Controllers
             return Ok(categories);
           
         }
-
         // GET api/<CategoriesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<NewCategoryDTO>> GetCategoryById(int id)
         {
-            return "value";
+            NewCategoryDTO category = await _categoryService.GetCategoryById(id);
+            if (category == null)
+                return NotFound();
+            return Ok(category);
         }
+        // POST api/<Users>
+        [HttpPost]
+        public async Task<ActionResult<NewCategoryDTO>> AddCategory([FromBody] CategoryDTO newCategory)
+        {
+            NewCategoryDTO? category = await _categoryService.AddCategory(newCategory);
+            return CreatedAtAction(nameof(GetCategoryById), new { Id = category.Id }, category);
+        }
+        
 
        
     }

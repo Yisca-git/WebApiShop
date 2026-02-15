@@ -16,6 +16,7 @@ namespace Services
             CreateMap<User, UserLoginDTO>().ReverseMap();
             CreateMap<User, UserRegisterDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Category, NewCategoryDTO>().ReverseMap();
             CreateMap<Order, OrderDTO>().ReverseMap();
             CreateMap<Order, NewOrderDTO>().ReverseMap();
             CreateMap<OrderItem, NewOrderItemDTO>().ReverseMap();

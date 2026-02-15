@@ -20,24 +20,34 @@ namespace Services
             _mapper = mapper;
 
         }
-
+        public bool CheckCategory(CategoryDTO category)
+        {
+            return category != null;
+        }
         public async Task<List<CategoryDTO>> GetCategories()
         {
             List<Category> categories = await _categoryRepository.GetCategories();
             List<CategoryDTO> categoryDTOs = _mapper.Map<List<Category>, List<CategoryDTO>>(categories);
             return categoryDTOs;
         }
-        public async Task<CategoryDTO> AddCategory(CategoryDTO NewCategory)
+        public async Task<NewCategoryDTO> GetCategoryById(int id)
         {
-            if(NewCategory == null)
+            Category? category = await _categoryRepository.GetCategoryById(id);
+            if (category == null)
             {
-                throw new ArgumentNullException(nameof(NewCategory));
+                return null;
             }
+            NewCategoryDTO categoryDTO = _mapper.Map<Category, NewCategoryDTO>(category);
+            return categoryDTO;
+        }
+        public async Task<NewCategoryDTO> AddCategory(CategoryDTO NewCategory)
+        { 
             Category category = _mapper.Map<CategoryDTO, Category>(NewCategory);
             Category addedCategory = await _categoryRepository.AddCategory(category);
-            CategoryDTO addedCategoryDTO = _mapper.Map<Category, CategoryDTO>(addedCategory);
+            NewCategoryDTO addedCategoryDTO = _mapper.Map<Category, NewCategoryDTO>(addedCategory);
             return addedCategoryDTO;
         }
+        
 
     }
 }
