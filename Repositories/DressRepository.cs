@@ -16,7 +16,7 @@ namespace Repositories
         }
         public async Task<Dress> GetDressById(int id)
         {
-            Dress? dressById = await _eventDressRentalContext.Dresses.FirstOrDefaultAsync(d => d.Id == id && d.isActive == true);
+            Dress? dressById = await _eventDressRentalContext.Dresses.FirstOrDefaultAsync(d => d.Id == id && d.IsActive == true);
             return dressById;
         }
         public async Task<Dress> AddDress(Dress dress)
@@ -53,5 +53,18 @@ namespace Repositories
           .Where(m => m.ModelId == id && m.IsActive == true)
           .Select(d => d.Size).Distinct().ToListAsync();
         }
+        public async Task<bool> CheckDressByDate(int id, DateOnly date)
+        {
+            var isDressAvailable = await _eventDressRentalContext.Dresses
+                .Where(d => d.Id == id && d.IsActive == true)
+                .Include(d => d.OrderItems)
+                    .ThenInclude(oi => oi.Order)
+                .Where(d => !d.OrderItems.Any(oi =>
+                    oi.Order.EventDate >= date.AddDays(-7) &&
+                    oi.Order.EventDate <= date.AddDays(7)))
+                .AnyAsync();
+            return isDressAvailable;
+        }
+
     }
 }

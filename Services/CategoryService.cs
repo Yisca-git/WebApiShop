@@ -33,10 +33,6 @@ namespace Services
         public async Task<NewCategoryDTO> GetCategoryById(int id)
         {
             Category? category = await _categoryRepository.GetCategoryById(id);
-            if (category == null)
-            {
-                return null;
-            }
             NewCategoryDTO categoryDTO = _mapper.Map<Category, NewCategoryDTO>(category);
             return categoryDTO;
         }

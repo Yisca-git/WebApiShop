@@ -83,7 +83,7 @@ namespace Services
             }
             await _modelRepository.DeleteModel(deleteMdl);
         }
-        public async Task UpdateModel(int id, ModelDTO updateModel)
+        public async Task UpdateModel(ModelDTO updateModel)
         {
             Model updeteMdl = _mapper.Map<ModelDTO, Model>(updateModel);
             await _modelRepository.UpdateModel(updeteMdl);

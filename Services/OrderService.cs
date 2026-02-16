@@ -13,13 +13,14 @@ namespace Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IDressService _dressService;
         private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository,IDressService dressService, IMapper mapper)
         {
             _orderRepository = orderRepository;
+            _dressService = dressService;
             _mapper = mapper;
-
         }
         public bool CheckOrder(NewOrderDTO order)
         {
@@ -51,6 +52,51 @@ namespace Services
             }
             return true;
         }
+        public bool CheckFinalPrice(OrderDTO updateOrder)
+        {
+            Order order = _mapper.Map<OrderDTO, Order>(updateOrder);
+            int sum = 0;
+            foreach (var item in order.OrderItems)
+            {
+                sum += item.Dress.Price;
+            }
+            if (order.FinalPrice != sum)
+            {
+                return false;
+            }
+            return true;
+        }
+        public async Task<bool> CheckOrderItems(NewOrderDTO newOrder)
+        {
+            Order order = _mapper.Map<NewOrderDTO, Order>(newOrder);
+            foreach (var item in order.OrderItems)
+            {
+                if (await _dressService.GetDressById(item.DressId) == null)
+                { return false;  }
+                if (item.DressId <= 0)
+                { return false;}
+                bool check =await _dressService.CheckDressByDate(item.DressId, order.EventDate);
+                if (!check)
+                {  return false;}
+            }
+            return true;
+        }
+        public async Task<bool> CheckOrderItems(OrderDTO updateOrder)
+        {
+            Order order = _mapper.Map<OrderDTO, Order>(updateOrder);
+            foreach (var item in order.OrderItems)
+            {
+                if (await _dressService.GetDressById(item.DressId) == null)
+                { return false; }
+                if (item.DressId <= 0)
+                { return false; }
+                bool check = await _dressService.CheckDressByDate(item.DressId, order.EventDate);
+                if (!check)
+                { return false; }
+            }
+            return true;
+        }
+
         public async Task<OrderDTO> AddOrder(NewOrderDTO newOrder)
         {
             Order order = _mapper.Map<NewOrderDTO, Order>(newOrder);
@@ -62,20 +108,12 @@ namespace Services
         public async Task<OrderDTO> GetOrderById(int id)
         {
             Order order = await _orderRepository.GetOrderById(id);
-            if (order == null)
-            {
-                return null;
-            }
             OrderDTO orderDTO = _mapper.Map<Order, OrderDTO>(order);
             return orderDTO;
         }
         public async Task<List<OrderDTO>> GetOrdersByUserId(int userId)
         {
             List<Order> orders = await _orderRepository.GetOrdersByUserId(userId);
-            if (orders == null)
-            {
-                return null;
-            }
             List<OrderDTO> orderDTOs = _mapper.Map<List<Order>, List<OrderDTO>>(orders);
             return orderDTOs;
         }
@@ -85,9 +123,9 @@ namespace Services
             List<OrderDTO> orderDTOs = _mapper.Map<List<Order>, List<OrderDTO>>(orders);
             return orderDTOs;
         }
-        public async Task<List<OrderDTO>> GetOrderByDates(DateOnly date)
-        {  
-            List<Order> orders = await _orderRepository.GetOrdersByDate(date);
+        public async Task<List<OrderDTO>> GetUnpackedOrdersUntilDate(DateOnly date)
+        {
+            List<Order> orders = await _orderRepository.GetUnpackedOrdersUntilDate(date);
             List<OrderDTO> orderDTOs = _mapper.Map<List<Order>, List<OrderDTO>>(orders);
             return orderDTOs;
 
@@ -103,6 +141,7 @@ namespace Services
             Order order = _mapper.Map<OrderDTO, Order>(updateOrder);
             await _orderRepository.UpdateOrder(order);
         }
+        
 
     }
 }

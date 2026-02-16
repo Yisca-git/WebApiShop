@@ -10,6 +10,7 @@ namespace Repositories
         Task UpdateDress(Dress dress);
         Task<int> GetCountByModelIdAndSizeForDate(int id, string size, DateOnly date);
         Task<List<string>> GetSizesByModelId(int id);
+        Task<bool> CheckDressByDate(int id, DateOnly date);
 
     }
 }

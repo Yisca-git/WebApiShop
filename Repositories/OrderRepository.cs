@@ -36,7 +36,7 @@ namespace Repositories
         {
             return await _eventDressRentalContext.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Dress).OrderBy(o => o.OrderDate).Include(s => s.Status).ToListAsync();
         }
-        public async Task<List<Order>> GetOrdersByDate(DateOnly date)
+        public async Task<List<Order>> GetUnpackedOrdersUntilDate(DateOnly date)
         {
           return await _eventDressRentalContext.Orders.Where(o => o.EventDate <= date && o.StatusId == 1).Include(o => o.OrderItems).ThenInclude(oi => oi.Dress).ToListAsync();
         }
