@@ -13,7 +13,6 @@ namespace DTOs
         int Id,
         [Required]
         string Name,
-        [Required]
         string Description
     );
 }

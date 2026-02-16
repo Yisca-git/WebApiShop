@@ -19,7 +19,7 @@ namespace WebApiShop.Controllers
         // GET: api/<ModelsController>
         [HttpGet]
         public async Task<ActionResult<FinalModels>> GetModels(string? Description, int? minPrice,
-                       int? maxPrice,[FromQuery] int[] categoriesId, string color, int position =1 , int skip = 8)
+                       int? maxPrice,[FromQuery] int[] categoriesId, string? color, int position =1 , int skip = 8)
         {
             if(!_modelService.ValidateQueryParameters(position, skip, minPrice, maxPrice))
             {
@@ -47,7 +47,11 @@ namespace WebApiShop.Controllers
         [HttpPost]
         public async Task<ActionResult<ModelDTO>> AddModel([FromBody] NewModelDTO newModel)
         {
-            if(!_modelService.CheckBasePrice(newModel.BasePrice))
+            if(! await _modelService.CheckCategories(newModel.Categories))
+            {
+                return BadRequest("One or more categories do not exist.");
+            }
+            if (!_modelService.CheckBasePrice(newModel.BasePrice))
             {
                 return BadRequest("Not valid price.");
             }
@@ -59,7 +63,11 @@ namespace WebApiShop.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateModel(int id, [FromBody] ModelDTO updateModel)
         {
-            if (_modelService.GetModelById(updateModel.Id) == null)
+            if (!await _modelService.CheckCategories(updateModel.Categories))
+            {
+                return BadRequest("One or more categories do not exist.");
+            }
+            if (!await _modelService.IsExistsModelById(id))
             {
                 return NotFound();
             }
@@ -73,9 +81,10 @@ namespace WebApiShop.Controllers
 
         // DELETE api/<ModelsController>/5
         [HttpDelete("{id}")]
+
         public async Task<IActionResult> DeleteMoedl([FromBody] ModelDTO deleteModel)
         {
-            if (_modelService.GetModelById(deleteModel.Id) == null)
+            if (!await _modelService.IsExistsModelById(deleteModel.Id))
             {
                 return NotFound();
             }

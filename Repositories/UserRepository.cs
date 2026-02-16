@@ -49,6 +49,9 @@ namespace Repositories
             await _eventDressRentalContext.SaveChangesAsync();
             return UserToUpdate;
         }
-
+        public async Task<bool> IsExistsUserById(int id)
+        {
+            return await _eventDressRentalContext.Users.AnyAsync(u => u.Id == id);
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace Repositories
         Task<List<Category>> GetCategories();
         Task<Category> GetCategoryById(int id);
         Task<Category> AddCategory(Category category);
+        Task<bool> IsExistsCategoryById(int id);
     }
 }

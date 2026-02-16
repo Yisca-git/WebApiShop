@@ -41,6 +41,7 @@ namespace Services
         public async Task<DressDTO> AddDress(NewDressDTO newDress)
         {
             Dress dress = _mapper.Map<NewDressDTO, Dress>(newDress);
+            dress.IsActive = true;
             Dress addedDress = await _dressRepository.AddDress(dress);
             DressDTO addedDressDTO = _mapper.Map<Dress, DressDTO>(addedDress);
             return addedDressDTO;
@@ -69,6 +70,9 @@ namespace Services
             return await _dressRepository.CheckDressByDate(id, date);
         }
 
-
+        public async Task<bool> IsExistsDressById(int id)
+        {
+            return await _dressRepository.IsExistsDressById(id);
+        }
     }
 }

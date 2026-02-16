@@ -79,10 +79,10 @@ namespace WebApiShop.Controllers
             {
                 return BadRequest("Password is not strong enough");
             }
-            //if(await _userService.GetUserById(id) == null)
-            //{
-            //    return NotFound();
-            //}
+            if (!await _userService.IsExistsUserById(id))
+            {
+                return NotFound();
+            }
             await _userService.UpdateUser(id, updateUser);
             return Ok(updateUser);
         }

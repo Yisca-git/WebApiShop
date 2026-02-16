@@ -35,6 +35,8 @@ namespace WebApiShop.Controllers
         {
             if (!_dressService.CheckPrice(newDress.Price))
                 return BadRequest("Price must be more than 0");
+            if(!await _modelService.IsExistsModelById(newDress.ModelId))
+                return NotFound("Model not found");
             DressDTO dress = await _dressService.AddDress(newDress);
             return CreatedAtAction(nameof(GetDressById), new { Id = dress.Id }, dress);
         }
@@ -43,11 +45,11 @@ namespace WebApiShop.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDress(int id, [FromBody] DressDTO updateDress)
         {
-            if (_dressService.CheckPrice(updateDress.Price))
+            if (!_dressService.CheckPrice(updateDress.Price))
             {
                 return BadRequest("Price must be more than 0");
             }
-            if (_dressService.GetDressById(id) == null)
+            if(!await _dressService.IsExistsDressById(id))
             {
                 return NotFound();
             }
@@ -59,7 +61,7 @@ namespace WebApiShop.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(DressDTO deleteDress)
         {
-            if (_dressService.GetDressById(deleteDress.Id) == null)
+            if(!await _dressService.IsExistsDressById(deleteDress.Id))
             {
                 return NotFound();
             }

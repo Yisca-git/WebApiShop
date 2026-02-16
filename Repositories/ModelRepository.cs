@@ -43,21 +43,28 @@ namespace Repositories
         public async Task<Model> AddModel(Model model)
         {
             await _eventDressRentalContext.Models.AddAsync(model);
+            foreach (var category in model.Categories)
+            {
+                _eventDressRentalContext.Entry(category).State = EntityState.Unchanged;
+            }
             await _eventDressRentalContext.SaveChangesAsync();
             return model;
-        }
+        }     
         public async Task DeleteModel(Model model)
         {
             _eventDressRentalContext.Models.Update(model);
             await _eventDressRentalContext.SaveChangesAsync();       
         }
         public async Task UpdateModel(Model model)
-        {
+        {   
             _eventDressRentalContext.Models.Update(model);
             await _eventDressRentalContext.SaveChangesAsync();
         }
-        
 
+        public async Task<bool> IsExistsModelById(int id)
+        {
+            return await _eventDressRentalContext.Models.AnyAsync(m => m.Id == id && m.IsActive == true);
+        }
 
     }
 }

@@ -32,7 +32,10 @@ namespace Repositories
             return category;
         }
 
-
+        public async Task<bool> IsExistsCategoryById(int id)
+        {
+            return await _eventDressRentalContext.Categories.AnyAsync(u => u.Id == id);
+        }
 
     }
 }

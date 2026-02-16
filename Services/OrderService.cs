@@ -100,6 +100,7 @@ namespace Services
         public async Task<OrderDTO> AddOrder(NewOrderDTO newOrder)
         {
             Order order = _mapper.Map<NewOrderDTO, Order>(newOrder);
+            order.StatusId = 1;
             Order addedOrder = await _orderRepository.AddOrder(order);
             OrderDTO addedOrderDTO = _mapper.Map<Order, OrderDTO>(addedOrder);
             return addedOrderDTO;

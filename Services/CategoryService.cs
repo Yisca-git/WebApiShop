@@ -43,7 +43,10 @@ namespace Services
             NewCategoryDTO addedCategoryDTO = _mapper.Map<Category, NewCategoryDTO>(addedCategory);
             return addedCategoryDTO;
         }
-        
+        public async Task<bool> IsExistsCategoryById(int id)
+        {
+            return await _categoryRepository.IsExistsCategoryById(id);
+        }
 
     }
 }

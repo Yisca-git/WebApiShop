@@ -9,5 +9,6 @@ namespace Repositories
         Task<User> AddUser(User user);
         Task<User> LogIn(User loginUser);
         Task<User> UpdateUser(int id, User updateUser);
+        Task<bool> IsExistsUserById(int id);
     }
 }

@@ -63,5 +63,9 @@ namespace Services
             User user = _mapper.Map<UserDTO, User>(updateUser);
             await _userRepository.UpdateUser(id, user);
         }
+        public async Task<bool> IsExistsUserById(int id)
+        {
+            return await _userRepository.IsExistsUserById(id);
+        }
     }
 }

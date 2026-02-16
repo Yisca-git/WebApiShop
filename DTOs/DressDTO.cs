@@ -10,7 +10,7 @@ namespace DTOs
     public record DressDTO
     (
         [Required]
-        int Id,
+        int Id, 
         [Required]
         string Size,
         [Required]
@@ -19,8 +19,7 @@ namespace DTOs
         [Required]
         string ModelName,
         [Required]
-        string ModelImgUrl,
-        [Required]
+        string ModelImgUrl,     
         bool IsActive
 
     );

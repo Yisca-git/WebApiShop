@@ -25,15 +25,23 @@ namespace Repositories
             await _eventDressRentalContext.SaveChangesAsync();
             return dress;
         }
+
         public async Task UpdateDress(Dress dress)
         {
-            _eventDressRentalContext.Dresses.Update(dress);
-            await _eventDressRentalContext.SaveChangesAsync();
+            await _eventDressRentalContext.Dresses
+           .Where(d => d.Id == dress.Id)
+           .ExecuteUpdateAsync(s => s
+           .SetProperty(d => d.Price, dress.Price)
+           .SetProperty(d => d.Size, dress.Size)
+           .SetProperty(d => d.Note, dress.Note) );    
         }
         public async Task DeleteDress(Dress dress)
         {
-            _eventDressRentalContext.Dresses.Update(dress);
-            await _eventDressRentalContext.SaveChangesAsync();
+            await _eventDressRentalContext.Dresses
+           .Where(d => d.Id == dress.Id)
+           .ExecuteUpdateAsync(s => s
+          .SetProperty(d => d.IsActive, dress.IsActive));
+      
         }
         public async Task<int> GetCountByModelIdAndSizeForDate(int id, string size, DateOnly date)
         {
@@ -65,6 +73,9 @@ namespace Repositories
                 .AnyAsync();
             return isDressAvailable;
         }
-
+        public async Task<bool> IsExistsDressById(int id)
+        {
+            return await _eventDressRentalContext.Dresses.AnyAsync(u => u.Id == id);
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace Repositories
        public Task<Model> AddModel(Model model);
        public Task DeleteModel(Model model);
        public Task UpdateModel(Model model);
+        Task<bool> IsExistsModelById(int id);
     }
 }
