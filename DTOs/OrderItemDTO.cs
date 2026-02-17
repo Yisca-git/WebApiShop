@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    public record NewOrderItemDTO
+    public record OrderItemDTO
     (
         [Required]
         int DressId,
         [Required]
         int DressPrice
+
     );
 }

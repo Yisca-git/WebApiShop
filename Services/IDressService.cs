@@ -14,5 +14,7 @@ namespace Services
         Task UpdateDress(int id, DressDTO updateDress);
         Task<bool> CheckDressByDate(int id, DateOnly date);
         Task<bool> IsExistsDressById(int id);
+        Task<bool> IsDressAvailable(int id, DateOnly date);
+        Task<int> GetPriceById(int id);
     }
 }

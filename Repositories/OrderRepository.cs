@@ -42,14 +42,19 @@ namespace Repositories
         }
         public async Task UpdateStatusOrder(Order order)
         {
-            _eventDressRentalContext.Orders.Update(order);
-            await _eventDressRentalContext.SaveChangesAsync();
+            await _eventDressRentalContext.Orders
+            .Where(d => d.Id == order.Id)
+            .ExecuteUpdateAsync(s => s
+            .SetProperty(d => d.StatusId, order.StatusId));
         }
         public async Task UpdateOrder(Order order)
         {
             _eventDressRentalContext.Orders.Update(order);
             await _eventDressRentalContext.SaveChangesAsync();
         }
-        
+        public async Task<bool> IsExistsOrderById(int id)
+        {
+            return await _eventDressRentalContext.Orders.AnyAsync(c => c.Id == id);
+        }
+        }
     }
-}

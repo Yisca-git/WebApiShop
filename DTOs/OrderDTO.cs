@@ -8,25 +8,36 @@ using System.Threading.Tasks;
 namespace DTOs
 {
     public record OrderDTO
-    (
+    {
         [Required]
-        int Id,
+        public int Id { get; init; }
+
         [Required]
-        DateOnly OrderDate,
+        public DateOnly OrderDate { get; init; }
+
         [Required]
-        DateOnly EventDate,
+        public DateOnly EventDate { get; init; }
+
         [Required]
-        int FinalPrice,
+        public int FinalPrice { get; init; }
+
         [Required]
-        int UserId,
+        public int UserId { get; init; }
+
+        public string? Note { get; init; }
         [Required]
-        string UserFirstName,
+        public int StatusId { get; init; } = 1!;
         [Required]
-        string UserLastName,
-        string Note,
+        public string StatusName { get; init; } = null!;
+
         [Required]
-        List<DressDTO> Dresses,
+        public string UserFirstName { get; init; } = null!;
+
         [Required]
-        string StatusName
-    );
+        public string UserLastName { get; init; } = null!;
+
+        [Required]
+        public List<OrderItemDTO> OrderItems { get; init; } = new();
+
+    }
 }

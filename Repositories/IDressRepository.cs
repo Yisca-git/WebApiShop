@@ -12,6 +12,7 @@ namespace Repositories
         Task<List<string>> GetSizesByModelId(int id);
         Task<bool> CheckDressByDate(int id, DateOnly date);
         Task<bool> IsExistsDressById(int id);
-
+        Task<bool> IsDressAvailable(int id, DateOnly date);
+        Task<int> GetPriceById(int id);
     }
 }

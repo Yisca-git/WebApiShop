@@ -13,7 +13,7 @@ namespace Services
 {
     public class DressService : IDressService
     {
-        private readonly IDressRepository _dressRepository;    
+        private readonly IDressRepository _dressRepository;
         private readonly IMapper _mapper;
 
         public DressService(IDressRepository dressRepository, IMapper mapper)
@@ -30,7 +30,7 @@ namespace Services
         {
             return date > DateOnly.FromDateTime(DateTime.Now);
         }
-        
+
         //
         public async Task<DressDTO> GetDressById(int id)
         {
@@ -74,5 +74,15 @@ namespace Services
         {
             return await _dressRepository.IsExistsDressById(id);
         }
+        public async Task<bool> IsDressAvailable(int id, DateOnly date)
+        {
+            return await _dressRepository.IsDressAvailable(id, date);
+
+        }
+        public async Task<int> GetPriceById(int id)
+        {
+            return await _dressRepository.GetPriceById(id);
+
+        }
     }
-}
+    }

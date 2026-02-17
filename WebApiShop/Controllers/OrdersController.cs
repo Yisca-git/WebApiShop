@@ -67,11 +67,11 @@ namespace WebApiShop.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderDTO>> AddOrder([FromBody] NewOrderDTO newOrder)
         {
-            if(!_orderService.CheckDate(newOrder.EventDate))
+            if (!_orderService.CheckDate(newOrder.EventDate))
                 return BadRequest("Event date must be in the future");
-            if(!_orderService.CheckDate(newOrder.OrderDate, newOrder.EventDate))
-                return BadRequest("In valid order date and event date");
-            if(!_orderService.CheckFinalPrice(newOrder))
+            if (!_orderService.CheckDate(newOrder.OrderDate, newOrder.EventDate))
+                return BadRequest("Invalid order date and event date");
+            if (!await _orderService.CheckFinalPrice(newOrder))
                 return BadRequest("Final price is not correct");
             bool isValidOrder = await _orderService.CheckOrderItems(newOrder);
             if (!isValidOrder)
@@ -90,7 +90,7 @@ namespace WebApiShop.Controllers
                 return BadRequest("Event date must be in the future");
             if (!_orderService.CheckDate(updateOrder.OrderDate, updateOrder.EventDate))
                 return BadRequest("In valid order date and event date");
-            if (!_orderService.CheckFinalPrice(updateOrder))
+            if (!await _orderService.CheckFinalPrice(updateOrder))
                 return BadRequest("Final price is not correct");
             bool isValidOrder = await _orderService.CheckOrderItems(updateOrder);
             if (!isValidOrder)
@@ -103,9 +103,9 @@ namespace WebApiShop.Controllers
         public async Task<IActionResult> UpdateStatusOrder(OrderDTO upStsOrder, int statusId)
         {
             if (!_orderService.CheckStatus(statusId))
-                return BadRequest("Invalid status id"); 
-            if (await _orderService.GetOrderById(upStsOrder.Id) == null)
-                return NotFound("Order not found");
+                return BadRequest("Invalid status id");
+            if (!await _orderService.IsExistsOrderById(upStsOrder.Id))
+                return NotFound();
             await _orderService.UpdateStatusOrder(upStsOrder, statusId);
             return Ok(upStsOrder);
         }

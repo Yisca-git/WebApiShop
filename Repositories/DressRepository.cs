@@ -33,7 +33,7 @@ namespace Repositories
            .ExecuteUpdateAsync(s => s
            .SetProperty(d => d.Price, dress.Price)
            .SetProperty(d => d.Size, dress.Size)
-           .SetProperty(d => d.Note, dress.Note) );    
+           .SetProperty(d => d.Note, dress.Note));
         }
         public async Task DeleteDress(Dress dress)
         {
@@ -41,7 +41,7 @@ namespace Repositories
            .Where(d => d.Id == dress.Id)
            .ExecuteUpdateAsync(s => s
           .SetProperty(d => d.IsActive, dress.IsActive));
-      
+
         }
         public async Task<int> GetCountByModelIdAndSizeForDate(int id, string size, DateOnly date)
         {
@@ -77,5 +77,25 @@ namespace Repositories
         {
             return await _eventDressRentalContext.Dresses.AnyAsync(u => u.Id == id);
         }
+        public async Task<bool> IsDressAvailable(int id, DateOnly date)
+        {
+            var isDressAvailable = await _eventDressRentalContext.Dresses
+                .Where(d => d.Id == id && d.IsActive == true)
+                .Include(d => d.OrderItems)
+                    .ThenInclude(oi => oi.Order)
+                .Where(d => !d.OrderItems.Any(oi =>
+                    oi.Order.EventDate >= date.AddDays(-7) &&
+                    oi.Order.EventDate <= date.AddDays(7)))
+                .AnyAsync();
+            return isDressAvailable;
+        }
+        public async Task<int> GetPriceById(int id)
+        {
+            return await _eventDressRentalContext.Dresses
+            .Where(d => d.Id == id)
+            .Select(d => d.Price)
+            .FirstOrDefaultAsync();
+
+        }
     }
-}
+    }

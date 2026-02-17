@@ -36,63 +36,63 @@ namespace Services
         }
         public bool CheckDate(DateOnly OrderDate, DateOnly EventDate)
         {
-            return OrderDate >= DateOnly.FromDateTime(DateTime.Now) && EventDate >= DateOnly.FromDateTime(DateTime.Now);
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            return OrderDate >= today &&
+                   EventDate >= today &&
+                   EventDate >= OrderDate;
         }
-        public bool CheckFinalPrice(NewOrderDTO newOrder)
+        public async Task<bool> CheckFinalPrice(NewOrderDTO newOrder)
         {
-            Order order = _mapper.Map<NewOrderDTO, Order>(newOrder);
+            Order postOrder = _mapper.Map<NewOrderDTO, Order>(newOrder);
             int sum = 0;
-            foreach (var item in order.OrderItems)
+            foreach (var item in postOrder.OrderItems)
             {
-                sum += item.Dress.Price;
+                int dressSum = await _dressService.GetPriceById(item.DressId);
+                sum += dressSum;
             }
-            if (order.FinalPrice != sum)
-            {
+            if (sum != postOrder.FinalPrice)
                 return false;
-            }
             return true;
         }
-        public bool CheckFinalPrice(OrderDTO updateOrder)
+        public async Task<bool> CheckFinalPrice(OrderDTO updateOrder)
         {
-            Order order = _mapper.Map<OrderDTO, Order>(updateOrder);
+            Order postOrder = _mapper.Map<OrderDTO, Order>(updateOrder);
             int sum = 0;
-            foreach (var item in order.OrderItems)
+            foreach (var item in postOrder.OrderItems)
             {
-                sum += item.Dress.Price;
+                int dressSum = await _dressService.GetPriceById(item.DressId);
+                sum += dressSum;
             }
-            if (order.FinalPrice != sum)
-            {
+            if (sum != postOrder.FinalPrice)
                 return false;
-            }
             return true;
         }
         public async Task<bool> CheckOrderItems(NewOrderDTO newOrder)
         {
-            Order order = _mapper.Map<NewOrderDTO, Order>(newOrder);
-            foreach (var item in order.OrderItems)
+            Order postOrder = _mapper.Map<NewOrderDTO, Order>(newOrder);
+            foreach (var item in postOrder.OrderItems)
             {
                 if (await _dressService.GetDressById(item.DressId) == null)
-                { return false;  }
-                if (item.DressId <= 0)
-                { return false;}
-                bool check =await _dressService.CheckDressByDate(item.DressId, order.EventDate);
-                if (!check)
-                {  return false;}
+                {
+                    return false;
+                }
+                bool isValid = await _dressService.IsDressAvailable(item.DressId, postOrder.EventDate);
+                if (!isValid)
+                    return false;
             }
             return true;
         }
+
         public async Task<bool> CheckOrderItems(OrderDTO updateOrder)
         {
-            Order order = _mapper.Map<OrderDTO, Order>(updateOrder);
-            foreach (var item in order.OrderItems)
+            Order postOrder = _mapper.Map<OrderDTO, Order>(updateOrder);
+            foreach (var item in postOrder.OrderItems)
             {
                 if (await _dressService.GetDressById(item.DressId) == null)
-                { return false; }
-                if (item.DressId <= 0)
-                { return false; }
-                bool check = await _dressService.CheckDressByDate(item.DressId, order.EventDate);
-                if (!check)
-                { return false; }
+                {
+                    return false;
+                }
+                
             }
             return true;
         }
@@ -142,7 +142,10 @@ namespace Services
             Order order = _mapper.Map<OrderDTO, Order>(updateOrder);
             await _orderRepository.UpdateOrder(order);
         }
-        
+        public async Task<bool> IsExistsOrderById(int id)
+        {
+            return await _orderRepository.IsExistsOrderById(id);
+        }
 
+        }
     }
-}

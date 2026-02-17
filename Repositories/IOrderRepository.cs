@@ -11,7 +11,7 @@ namespace Repositories
         Task<List<Order>> GetUnpackedOrdersUntilDate(DateOnly date);
         Task UpdateStatusOrder(Order order);
         Task UpdateOrder(Order order);
-        
+        Task<bool> IsExistsOrderById(int id);
 
     }
 }
