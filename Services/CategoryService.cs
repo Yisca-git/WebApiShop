@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Entities;
 using Entities.DTOs;
 using Repositories;
+
 namespace Services
 {
     public class CategoryService : ICategoryService
@@ -18,7 +14,6 @@ namespace Services
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
-
         }
 
         public async Task<IEnumerable<CategoryDTO>> GetCategories()

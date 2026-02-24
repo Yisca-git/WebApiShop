@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Entities;
 using Entities.DTOs;
-
 using Repositories;
 
 namespace Services
@@ -12,18 +11,17 @@ namespace Services
         private readonly IUserPasswordService _userPasswordService;
         private readonly IMapper _mapper;
 
-
         public UserService(IUserRepository userRepository, IUserPasswordService userPasswordService, IMapper mapper)
         {
             _userRepository = userRepository;
             _userPasswordService = userPasswordService;
             _mapper = mapper;
         }
-        
+
         public async Task<IEnumerable<UserDTO>> GetUsers()
         {
-            IEnumerable <User> users = await _userRepository.GetUsers();
-            IEnumerable<UserDTO> userDTOs = _mapper.Map< IEnumerable<User> ,IEnumerable <UserDTO>>(users);
+            IEnumerable<User> users = await _userRepository.GetUsers();
+            IEnumerable<UserDTO> userDTOs = _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
             return userDTOs;
         }
 

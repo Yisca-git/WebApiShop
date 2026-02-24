@@ -1,11 +1,8 @@
-
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using NLog.Web;
 using Repositories;
 using Services;
-using Microsoft.Extensions.Configuration;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using NLog.Web;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseNLog();
@@ -13,21 +10,16 @@ builder.Host.UseNLog();
 // Add services to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-
 builder.Services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
 builder.Services.AddScoped<IUserPasswordService, UserPasswordService>();
-
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
-
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();    
-builder.Services.AddScoped<IOrderService, OrderService>();  
-
-builder.Services.AddDbContext<WebApiShopContext>(options => options.UseSqlServer
-(builder.Configuration.GetConnectionString("Home")));
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddDbContext<WebApiShopContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("Home")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
